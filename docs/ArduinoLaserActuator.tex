@@ -19,33 +19,93 @@
 \begin{document}
 \maketitle
 
-\section{Objectiu}
-
-\section{Prototip}
+\section{Desenvolupament del prototip}
 \subsection{Descripció}
-En aquest prototip s'implementarà un posicionador de làser a partir de la detecció de moviment
+En aquest prototip s'implementarà un posicionador de làser a partir de la detecció de moviment.
 
-
-\subsection{Arduino}
-Arduino és una plataforma de codi obert (\emph{opensource}) de desnvolupament de prototips electrònics. La programació del xip es fa mitjançant un llenguatge de programació propi basat en C++.
 
 \begin{figure}[htbp] %  figure placement: here, top, bottom, or page
    \centering
-	\includegraphics[scale=0.5]{images/arduino_uno_test.jpg} 
-   \caption{Placa Arduino Uno}
+	\includegraphics[width=1.0\textwidth]{images/muntatge} 
+   \caption{Posicionador de làser amb detector de moviment}
    \label{fig:example}
 \end{figure}
 
+\subsection{Material}
+\begin{itemize}
+	\item Arduino Uni
+	\item Protoboard
+	\item cables
+	\item PIR sensor
+	\item Servo motor
+\end{itemize}
 
-\
+
+\pagebreak
+\subsection{Codi}
+
+\scriptsize
+\begin{verbatim}
+/* 
+ laser_actuator 
+ Creat:     2012-08-29 (Josep)
+ Modificat: 2012-09-01 (Josep)
+*/
+
+#include <Servo.h>
+
+int led = 13;
+int motionPin = 2;
+int actuatorPin = 9;
+
+Servo actuator;
+
+void setup() {
+  pinMode(led, OUTPUT);
+  pinMode(motionPin, INPUT);
+  actuator.attach(actuatorPin);
+}
+void loop() {
+  int motionVal = digitalRead(motionPin);
+  if (motionVal == HIGH) {
+    digitalWrite(led, HIGH);
+    espanta();
+  }else{
+    digitalWrite(led, LOW);
+  }
+}
+
+
+/*
+  Funcio espanta()
+  Posa el laser a 0º, 90º, 18º0 i torna a 0º en intervals d' 1 segon
+*/
+void espanta(){
+  actuator.write(0);
+  delay(1000);
+  actuator.write(90);
+  delay(1000);
+  actuator.write(180);
+  delay(1000);
+  actuator.write(0);
+}
+\end{verbatim}
+\normalsize
+
+En el moment que el sensor PIR detecta moviment es posiciona el motor a 0º, passat un segon a 90º, passat un altre segon a 180º i un segon més tard a la posició inicial de 0º.
+
+Aquest procés es repeteix fins que el sensor no detecti més moviment. Hem de tenir en compte que aquest sensor no detecta presència, només moviment.
+
+\pagebreak
 \begin{thebibliography}{9}
 
-\bibitem{lamport94}
-  Arduino
+\bibitem{arduino-web}  Pàgina web d'Arduino: 
   
-   \url{http://arduino.cc/}
+	\url{http://arduino.cc/}
 
-\bibitem{}
+\bibitem{github-project} Projecte a GitHub
+
+	\url https://github.com/apuratepp/ArduinoLaserActuator
 
 \end{thebibliography}
 
